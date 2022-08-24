@@ -6,8 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 class LocationControllerImpl implements LocationController {
-  final StreamController<LatLngData> _controller =
-      StreamController<LatLngData>.broadcast();
+  final StreamController<LatLngData> _controller = StreamController<LatLngData>.broadcast();
   StreamSubscription<Position>? _onLocationChangedSub;
   StreamSubscription<CompassEvent>? _compassEventsSub;
 
@@ -44,26 +43,17 @@ class LocationControllerImpl implements LocationController {
 
   Future<bool> requestPermissions() async {
     if (await Geolocator.checkPermission() == LocationPermission.denied) {
-      if (<LocationPermission>[
-            LocationPermission.always,
-            LocationPermission.whileInUse
-          ].contains(await Geolocator.requestPermission()) ==
-          false) {
+      if (<LocationPermission>[LocationPermission.always, LocationPermission.whileInUse].contains(await Geolocator.requestPermission()) == false) {
         return Future<bool>.value(false);
       }
     }
     return Future<bool>.value(true);
   }
 
-  Stream<LatLngData> subscribePosition(
-      Duration intervalDuration, LocationAccuracy locationAccuracy) {
+  Stream<LatLngData> subscribePosition(LocationSettings locationSettings) {
     _isSubscribed = true;
-    _onLocationChangedSub = Geolocator.getPositionStream(
-            intervalDuration: intervalDuration,
-            desiredAccuracy: locationAccuracy)
-        .listen((Position ld) {
-      _controller
-          .add(LatLngData(LatLng(ld.latitude, ld.longitude), ld.accuracy));
+    _onLocationChangedSub = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position ld) {
+      _controller.add(LatLngData(LatLng(ld.latitude, ld.longitude), ld.accuracy));
     }, onError: (Object error) {
       _controller.addError(error);
     }, onDone: () {
