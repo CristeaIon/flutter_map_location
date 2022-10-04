@@ -44,7 +44,7 @@ class _LocationLayerState extends State<LocationLayer> with WidgetsBindingObserv
   void initState() {
     super.initState();
     _controller = widget.options.controller as LocationControllerImpl? ?? LocationController() as LocationControllerImpl;
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     if (widget.options.initiallyRequest) {
       _locationRequested = true;
       _initOnLocationUpdateSubscription();
@@ -55,7 +55,7 @@ class _LocationLayerState extends State<LocationLayer> with WidgetsBindingObserv
   void dispose() {
     _locationSub?.cancel();
     _controller.dispose();
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
